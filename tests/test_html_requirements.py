@@ -13,10 +13,12 @@ required_elements = [("doctype", 1),
                      ("p", 5),
                      ]
 
+project_path = "project/"
+project_path = "tests/test_project/"
 
 @pytest.fixture
 def files():
-    files = clerk.get_all_files_of_type("project/", "html")
+    files = clerk.get_all_files_of_type(project_path, "html")
     return files
 
 

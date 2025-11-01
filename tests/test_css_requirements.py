@@ -5,8 +5,10 @@ import pytest
 import file_clerk.clerk as clerk
 from webcode_tk import css_tools as css
 from webcode_tk import html_tools as html
+from webcode_tk import contrast_tools as contrast
 
 project_path = "project/"
+project_path = "tests/test_project/"
 html_files = html.get_all_html_files(project_path)
 styles_by_html_files = css.get_styles_by_html_files(project_path)
 global_color_rules = []
@@ -29,6 +31,17 @@ def set_style_attribute_tests(path):
             for datum in data:
                 results.append(datum)
     return results
+
+
+def prep_contrast_results(project_folder=project_path, level="AAA"):
+    results = contrast.generate_contrast_report(project_folder, "AAA")
+    other_results = contrast.analyze_contrast(project_folder)
+    output = []
+    for result in results:
+        split_result = result.split(":")
+        pass_fail, message = split_result
+        output.append([pass_fail, message])
+    return output
 
 
 def get_unique_font_families(project_folder):
@@ -70,23 +83,6 @@ def get_font_family_data(font_tests):
     for test in font_tests:
         rules_data.append((test[0], test[3]))
     return rules_data
-
-
-def prep_global_color_tests(global_color_contrast_tests,
-                            global_color_rules):
-    for rule in global_color_rules:
-        path = list(rule.keys())[0]
-        file = clerk.get_file_name(path)
-        data = rule[path]
-        if isinstance(data, list):
-            if len(data) == 1:
-                data = data[0]
-        selector = data.get("selector")
-        ratio = data.get("contrast_ratio")
-        passes = data.get("passes_normal_aaa")
-        global_color_contrast_tests.append(
-            (file, selector, ratio, passes)
-        )
 
 
 def get_figure_property_data(html_styles):
@@ -132,8 +128,7 @@ def get_required_properties(required_properties, has_required_properties,
 
 
 figure_property_data = get_figure_property_data(styles_by_html_files)
-prep_global_color_tests(global_color_contrast_tests,
-                        global_color_rules)
+contrast_results = prep_contrast_results(project_path)
 font_families_tests = get_unique_font_families(project_path)
 font_rules_results = get_font_rules_data(font_families_tests)
 font_selector_results = get_font_selector_data(font_families_tests)
@@ -141,7 +136,10 @@ font_family_results = get_font_family_data(font_families_tests)
 all_color_rules_results = get_all_color_rule_results(project_path)
 style_attributes_data = set_style_attribute_tests(project_path)
 if not style_attributes_data:
-    style_attributes_data = [(file, "no tag", "applies style attribute")]
+    try:
+        style_attributes_data = [(file, "no tag", "applies style attribute")]
+    except NameError:
+        style_attributes_data = [("no file", "no tag", "applies style attribute")]
 link_colors = css.get_link_color_data(project_path)
 
 
@@ -170,6 +168,19 @@ def link_color_details():
     return link_colors
 
 
+@pytest.fixture
+def has_css_applied():
+    css_applied = True
+    for item in style_attributes_data:
+        if "no file" in item[0]:
+            css_applied = False
+    return css_applied
+
+
+def test_for_any_css_tag_or_stylesheet(has_css_applied):
+    assert has_css_applied
+
+
 @pytest.mark.parametrize("file,tag,value", style_attributes_data)
 def test_files_for_style_attribute_data(file, tag, value):
     if tag == "no tag" and value == "applies style attribute":
@@ -181,25 +192,23 @@ def test_files_for_style_attribute_data(file, tag, value):
         assert not results
 
 
-def test_files_for_has_style_attributes(project_folder):
-    results = "No style attributes found"
-    expected = results
-    html_files = html.get_all_html_files(project_folder)
-    for file in html_files:
-        has_style_attribute = html.has_style_attribute_data(file)
-        if has_style_attribute:
-            filename = clerk.get_file_name(file)
-            results = f"{filename} has style attributes"
-    assert expected == results
+# def test_files_for_has_style_attributes(project_folder):
+#     results = "No style attributes found"
+#     expected = results
+#     html_files = html.get_all_html_files(project_folder)
+#     for file in html_files:
+#         has_style_attribute = html.has_style_attribute_data(file)
+#         if has_style_attribute:
+#             filename = clerk.get_file_name(file)
+#             results = f"{filename} has style attributes"
+#     assert expected == results
 
 
-@pytest.mark.parametrize("file,selector,ratio,results",
-                         global_color_contrast_tests)
-def test_files_for_global_color_contrast(file, selector, ratio, results):
-    result = f"Color contrast for {selector} passes with {ratio} ratio."
-    expected = result
-    if not results:
-        results = f"Color contrast for {file} failed."
+@pytest.mark.parametrize("passes,message",
+                         contrast_results)
+def test_files_for_contrast_results(passes, message):
+    result = f"{passes}:{message}"
+    expected = f"pass:{message}"
     assert result == expected
 
 

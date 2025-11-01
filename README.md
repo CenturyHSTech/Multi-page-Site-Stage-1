@@ -1,6 +1,5 @@
 # My Website Project
-Apply your new-found web design markup and styling skills by creating a 4-page website based on a topic of your choice.
-
+Apply your new-found web design markup and styling skills by creating a 4-page website based on one of the options described in the assignment.
 
 - Environment Set Up
 - Coding Your Project
@@ -10,35 +9,28 @@ Apply your new-found web design markup and styling skills by creating a 4-page w
 
 
 <details>
-<summary><strong>Environment Set Up</strong></summary>
+<summary><strong>VS Code Setup Instructions</strong></summary>
 
-Getting your project up and running in VS Code.
-1. Clone this project: `git clone`.
-2. Open the project in VS Code (double click on `About-Me-HTML-Part-1.code-workspace`)
-3. Open the terminal (View > New Terminal).
-4. Install the Python extension: ***Python extension for Visual Studio Code***
-5. In the terminal, type `poetry shell`.
-    - You should see a line saying something like `Spawning shell within C:\Users\my_username\AppData\Local\pypoetry\Cache\virtualenvs\simple-html-page-IMtvp_MA-py3.9`
-6. Note the name of your virtual environment file, which will look something like `simple-html-page-IMtvp_MA-py3.9`
-7. Open the Command Palette 
-    - in the menu it's: View > Command Palette
-    - you could also type `Ctrl + Shift + P`
-8. Type Python: Select Interpreter
-    - if you see the virtual environment file, click it.
-    - if you don't see it, click `Select at Workspace level`
-9. Select the virtual environment file from above (it should show the word Poetry in blue on the right)
-    - if you don't see it, close VS Code and re-open it and repeat steps 8 and 9.
-10. Type `poetry update` and wait for everything to install.
-11. In the terminal, once everything is done installing, type `pytest`
-12. If that doesn't work, click the Testing icon (looks like a beaker), then click the blue `Configure Python Tests` button, then select `pytest pytest framework` and choose the `tests` folder
-13. If that still doesn't work, ask your teacher to help you out.
-14. Follow the steps in [Coding Your Project](#coding-your-project).
-15. At key stopping points (usually once you test something in the browser and you like it), it's time to commit and push your changes like so...
-    * `git add *`
-    * `git commit -m "fixing/editing/adding ______"`
-    * `git push origin main`
-16. If you want to see if you are doing it right, check your code by typing `pytest`.
-17. Once you think you're done, save your changes, make one last commit and push, and turn in your assignment by clicking the "Mark as Done" button.
+1. Make sure you have python poetry installed (open the Software Center and look for it in apps)
+2. Open Command prompt by clicking in the search window and typing `cmd`
+3. Type `poetry --version` - if it gave you a version, you are ready. If not, get the teacher to show you.
+4. Make sure you add the Python Extension (the one with the Microsoft seal)
+5. Open the terminal (View > New Terminal)
+6. Run `poetry env activate` in the terminal
+7. Note your virtual environment name
+8. Open the Command Palette (`Ctrl + Shift + P`)
+9. Select the Python interpreter (look for the Poetry environment)
+10. Run `poetry update`
+11. Run `pytest` to test your code - it will give you an error (that's to be expected)
+12. Create a file named `index.html` into the `project` folder
+13. Follow in class instructions on how to code your html file.
+14. Review the [Project Requirements](project-requirements) for the assignment
+15. Commit and push changes regularly
+16. As you work, try typing `pytest` in the terminal to see what tests you are passing and which ones you are failing
+17. If you don't know what a failed test means, talk to your teacher to help you work through it.
+18. To get a 3/4 proficient in HTML, you need to pass all `test_html.py` tests.
+19. To get a 4/4 exceeds, you need to pass all tests (`test_html.py` and `test_html_exceeds.py`).
+20. Make sure you push all commits to receive a score.
 
 </details>
 
@@ -48,28 +40,38 @@ Getting your project up and running in VS Code.
 <summary><strong>Coding Your Project</strong></summary>
 
 Once the environment is set up, and you're ready to code...
-
+## HTML Structure
 1. Create a file named `index.html` in the `project` folder.
 2. Follow teacher instructions on creating your web page.
 3. Be sure to name your file in the title tag.
 4. Be sure to include all required tags for any web page (see the [list of required elements](#required-elements) to make sure you meet minimum requirements).
-5. Create the following layout elements for your page:
-    * A `<header>` at the top with your title (`<h1>` and a tagline `<p>` inside.)
-    * A `<nav>` element with an unordered list of links to each page including the home page as well as the other pages (at least 3 other pages).
-        - That means a minimum of 4 `<li>` elements each with at least 1 `<a>` element that uses a relative link to each page
-        - IMPORTANT: every page in your site needs to include the nav AND ***every nav must include the same links in the same order (even when they are linking to the same page they are on).***
-    * Either a `<section>` or an `<article>` for the main content of each page.
-    * A `<footer>` element at the bottom to put any credits (to yourself as well as any sources for images or text)
-6. Inside the `<section>`, you will need the following tags:
-    * At least 2 `<h2>` elements.
-    * At least 4 `<p>` elements.
-    * At least 2 `<figure>` elements for images with 1 `<img>` and a `<figcaption>` with a description or title for the image.
-    * No matter what styles you provide...
-        - ***everything must be readable***
-        - ***no text should be touching a border or edge of the screen***
-8. For more specific information on how to pass test, please refer to the README file in the project folder.
+5. Determine a layout for your page by creating a wireframe or mockup.
+6. From that layout determine which HTML5 sectioning content (`header`, `main`, `nav`, `footer`, `article`, etc.) you will use and where.
+7. Add content for the home page first by including sample information about each of the other pages (usually a heading that links to the page, some paragraphs of text and an image to go with it followed by a horizontal rule).
+8. To save time, I give you permission to get content from other websites or even use AI to generate text content, but ***you DO NOT have permission to have AI generate `HTML` markup, `CSS`, or `JavaScript`***.
+9. All content that you do not write yourself MUST be cited either in the footer or after the information you gathered.
+10. Create the navbar in the homepage and code it with all the links ready to link to your other pages.
+11. Once you think the home page is ready, run it through the [W3C Validator](https://validator.w3.org/#validate_by_upload) and fix any errors before you proceded.
+12. Once there are no errors, use the home page (i.e. `index.html`) as a template to create your other pages.
+13. Keep all filenames short: one or two words (using hyphens like `about-us.html`)
+14. Build out your content.
 
-*NOTE: as you are codign your page, be sure to check your page for errors using the [W3C File Upload Validator](https://validator.w3.org/#validate_by_upload)*
+## CSS 
+At any point after creating your initial `index.html` file, you can link to and begin styling.
+* Make sure all pages in your site link to the same stylesheet or stylesheets.
+* Start by styling the body with color and typography. 
+* Your instructor will guide you into creating layouts for your page.
+* I recommend a big photo banner for the page and a 1-column centered layout.
+* I also suggest a color palette that you generate using `CSS variables` for the colors.
+
+## Testing the project
+There are three crucial steps to perform before running the tests on your project:
+1. You must run `poetry env activate` and `poetry update`
+2. You must install the Python extension and set the Python interpreter (in `View > Command Palette > Python: Select Interpreter`)
+3. There needs to be an `HTML` document in the `project` folder.
+Once you've done that, try clicking on the Testing icon (it's a beaker/flask icon) and clicking the run icon.
+
+*NOTE: as you are coding your page, be sure to check your page for errors from time to time using the [W3C File Upload Validator](https://validator.w3.org/#validate_by_upload) or through pytest*
 
 </details>
 
@@ -83,17 +85,23 @@ Once the environment is set up, and you're ready to code...
     - `html`
     - `head`
     - `title`
+* Required Semantic Layout Elements
+    - `header` - at least one
+    - `nav` - at least one
+    - `main` or `article` - at least one or a combination
+    - `footer` - at least one
+* Optional Semantic Layout Elements (at least 2 of the following for the win) 
+    - `hgroup` - at least one used appropriately
+    - `section` - where appropriate
+    - `aside` - probably best for a pullout quote
 * Other required tags (see minimum #)
     - `h1` -> one per page (in the header)
-    - `header` -> one per page
     - `nav`  -> one (could be in the header or by itself)
     - `ul` -> at least one per page (inside the nav)
     - `li` -> at least 4 per page (inside the ul that's in the nav)
     - `a` -> at least 4 per page (inside each li inside the ul that's in the nav)
-    - `section` OR `article` -> at least 1 per page
     - `h2` -> two (in the section or article)
     - `p`  -> at least 5 per page (in the section or article and at least 1 in the footer)
-    - `footer` -> at least 1 per page
 
 ### Validity Requirements
 * No HTML errors are allowed
@@ -109,7 +117,7 @@ Once the environment is set up, and you're ready to code...
     - Apply a **color** to hyperlinks (to both the link and visited - hover is optional)
     - Apply a **background color AND color** to the `figure`
     - Apply a **styled border** around the `figure`
-    - Add **padding** to all layout elements (`header`, `nav`, `article` or `section`, `footer`).
+    - Add **padding** to any of the following layout elements if present (`header`, `nav`, `main`, `article`, `aside`, `hgroup` `section`, `footer`).
 
 NOTE: to check for errors, be sure to upload your HTML file to the [W3C File Upload Validator](https://validator.w3.org/#validate_by_upload)
 
