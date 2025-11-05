@@ -13,14 +13,12 @@ html_files = html.get_all_html_files(project_path)
 styles_by_html_files = css.get_styles_by_html_files(project_path)
 global_color_rules = []
 for file in html_files:
-    global_color_rules.append(css.get_global_colors(file))
+    try:
+        global_color_rules.append(css.get_global_colors(file))
+    except TypeError:
+        global_color_rules.append("fail: there are no global colors applied")
 global_color_contrast_tests = []
 no_style_attribute_tests = []
-
-
-def get_all_color_rule_results(project_path):
-    color_rule_results = css.get_project_color_contrast(project_path)
-    return color_rule_results
 
 
 def set_style_attribute_tests(path):
@@ -35,12 +33,26 @@ def set_style_attribute_tests(path):
 
 def prep_contrast_results(project_folder=project_path, level="AAA"):
     results = contrast.generate_contrast_report(project_folder, "AAA")
-    other_results = contrast.analyze_contrast(project_folder)
     output = []
+    filename = clerk.get_file_name(project_folder)
+
+    # until contrast toosl works, check for global colors
+    global_color_results = css.get_global_color_report(project_folder, level)
+    passes_global_contrast = True
+    for result in global_color_results:
+        if "fail" in result:
+            passes_global_contrast = False
+            output.append(("fail", f"{filename} fails global color contrast"))
     for result in results:
         split_result = result.split(":")
-        pass_fail, message = split_result
-        output.append([pass_fail, message])
+        if len(split_result) == 2:
+            pass_fail, message = split_result
+        else:
+            pass_fail = split_result[0]
+            message = "".join(split_result[1:]).strip()
+        if filename in result and not passes_global_contrast:
+            continue
+        output.append((pass_fail, message))
     return output
 
 
@@ -133,24 +145,22 @@ font_families_tests = get_unique_font_families(project_path)
 font_rules_results = get_font_rules_data(font_families_tests)
 font_selector_results = get_font_selector_data(font_families_tests)
 font_family_results = get_font_family_data(font_families_tests)
-all_color_rules_results = get_all_color_rule_results(project_path)
 style_attributes_data = set_style_attribute_tests(project_path)
 if not style_attributes_data:
     try:
-        style_attributes_data = [(file, "no tag", "applies style attribute")]
+        filename = clerk.get_file_name(file)
+        style_attributes_data = [(filename, "no tag", "applies style attribute")]
     except NameError:
         style_attributes_data = [("no file", "no tag", "applies style attribute")]
-link_colors = css.get_link_color_data(project_path)
-
+try:
+    link_colors = css.get_link_color_data(project_path)
+except TypeError:
+    link_colors = []
+    
 
 @pytest.fixture
 def project_folder():
     return project_path
-
-
-@pytest.fixture
-def all_color_data():
-    return all_color_rules_results
 
 
 @pytest.fixture
@@ -184,24 +194,14 @@ def test_for_any_css_tag_or_stylesheet(has_css_applied):
 @pytest.mark.parametrize("file,tag,value", style_attributes_data)
 def test_files_for_style_attribute_data(file, tag, value):
     if tag == "no tag" and value == "applies style attribute":
-        results = f"{file} passes with no style attributes."
-        expected = results
+        # ("no file", "no tag", "applies style attribute")
+        results = f"Pass: {file} has style attributes."
+        expected = "Pass: no file has style attributes."
         assert results == expected
     else:
         results = f"Tag: <{tag}> from '{file}' has a style attribute"
-        assert not results
-
-
-# def test_files_for_has_style_attributes(project_folder):
-#     results = "No style attributes found"
-#     expected = results
-#     html_files = html.get_all_html_files(project_folder)
-#     for file in html_files:
-#         has_style_attribute = html.has_style_attribute_data(file)
-#         if has_style_attribute:
-#             filename = clerk.get_file_name(file)
-#             results = f"{filename} has style attributes"
-#     assert expected == results
+        expected = f"Pass: {file} has no style attributes."
+        assert results == expected
 
 
 @pytest.mark.parametrize("passes,message",
