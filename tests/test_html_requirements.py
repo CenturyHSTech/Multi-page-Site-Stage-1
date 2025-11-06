@@ -20,7 +20,7 @@ required_elements = [("doctype", 1),
                      ("ul", 1),
                      ("li", 4),
                      ("a", 4),
-                     ]
+                    ]
 
 project_path = "project/"
 project_path = "tests/test_project/"
@@ -31,7 +31,7 @@ def files():
     return files
 
 
-def test_for_presence_of_html_files(files):
+def test_for_minimum_number_of_html_files(files):
     assert len(files) > 3
 
 

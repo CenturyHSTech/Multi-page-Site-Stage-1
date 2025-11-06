@@ -3135,6 +3135,24 @@ tomli = {version = ">=1", markers = "python_version < \"3.11\""}
 dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "requests", "setuptools", "xmlschema"]
 
 [[package]]
+name = "pytest-mock"
+version = "3.15.1"
+description = "Thin-wrapper around the mock package for easier use with pytest"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "pytest_mock-3.15.1-py3-none-any.whl", hash = "sha256:0a25e2eb88fe5168d535041d09a4529a188176ae608a6d249ee65abc0949630d"},
+    {file = "pytest_mock-3.15.1.tar.gz", hash = "sha256:1849a238f6f396da19762269de72cb1814ab44416fa73a8686deac10b0d87a0f"},
+]
+
+[package.dependencies]
+pytest = ">=6.2.5"
+
+[package.extras]
+dev = ["pre-commit", "pytest-asyncio", "tox"]
+
+[[package]]
 name = "python-dateutil"
 version = "2.9.0.post0"
 description = "Extensions to the standard Python datetime module"
@@ -3151,14 +3169,14 @@ six = ">=1.5"
 
 [[package]]
 name = "pytokens"
-version = "0.2.0"
-description = "A Fast, spec compliant Python 3.13+ tokenizer that runs on older Pythons."
+version = "0.3.0"
+description = "A Fast, spec compliant Python 3.14+ tokenizer that runs on older Pythons."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "pytokens-0.2.0-py3-none-any.whl", hash = "sha256:74d4b318c67f4295c13782ddd9abcb7e297ec5630ad060eb90abf7ebbefe59f8"},
-    {file = "pytokens-0.2.0.tar.gz", hash = "sha256:532d6421364e5869ea57a9523bf385f02586d4662acbcc0342afd69511b4dd43"},
+    {file = "pytokens-0.3.0-py3-none-any.whl", hash = "sha256:95b2b5eaf832e469d141a378872480ede3f251a5a5041b8ec6e581d3ac71bbf3"},
+    {file = "pytokens-0.3.0.tar.gz", hash = "sha256:2f932b14ed08de5fcf0b391ace2642f858f1394c0857202959000b68ed7a458a"},
 ]
 
 [package.extras]
@@ -4614,14 +4632,14 @@ files = [
 
 [[package]]
 name = "webcode-tk"
-version = "1.2.4"
+version = "1.2.6"
 description = ""
 optional = false
 python-versions = "<4.0,>=3.9.0"
 groups = ["main"]
 files = [
-    {file = "webcode_tk-1.2.4-py3-none-any.whl", hash = "sha256:69393d1c14ad6075cd12447739fb488f6a11463a4d152a2f8736847926116e66"},
-    {file = "webcode_tk-1.2.4.tar.gz", hash = "sha256:779093dd29f671de629c3180bd565e7b6852874cd72ab383e6d4b44be7a2106b"},
+    {file = "webcode_tk-1.2.6-py3-none-any.whl", hash = "sha256:2804f300eeb87370ef4c1b175cc4667fa52389a6ef2efaed63188c20b8ed6425"},
+    {file = "webcode_tk-1.2.6.tar.gz", hash = "sha256:46e36286406aad419a1dbdee94ce9dff6a83d055c7fc77cb812db90776f225da"},
 ]
 
 [package.dependencies]
@@ -4631,6 +4649,7 @@ lxml = ">=6.0.0,<7.0.0"
 mechanicalsoup = ">=1.4.0,<2.0.0"
 nltk = ">=3.8.1,<4.0.0"
 py-readability-metrics = ">=1.4.5,<2.0.0"
+pytest-mock = ">=3.15.1,<4.0.0"
 requests = ">=2.28.1,<3.0.0"
 textatistic = ">=0.0.1,<0.0.2"
 tinycss2 = ">=1.4.0,<2.0.0"

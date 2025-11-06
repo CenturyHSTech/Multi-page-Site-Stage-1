@@ -5,21 +5,32 @@ from file_clerk import clerk
 import pytest
 from webcode_tk import validator_tools as validator
 
+
+def get_html_error_report(html_files: list) -> list:
+    for file in html_files:
+        report = validator.get_validation_by_browser(file)
+        results = []
+        for item in report:
+            filename = clerk.get_file_name(file)
+            expected = f"pass: {filename} has no HTML errors!"
+            if "The document validates" in item.text:
+                results.append((expected, f"pass: {filename} has no HTML errors!"))
+            else:
+                content = item.text.split("Error:")
+                content.remove("")
+                errors = [f"fail: {filename} {msg}" for msg in content]
+                for error in errors:
+                    results.append((error, expected))
+
+    return results
+
+
 project_path = "project/"
 project_path = "tests/test_project/"
 html_results = []
 html_files = clerk.get_all_files_of_type(project_path, "html")
-for file in html_files:
-    report = validator.get_markup_validity(file)
-    expected = f"{file}: No Errors Found."
-    if not report:
-        result = expected
-        html_results.append((result, expected))
-    else:
-        for error in report:
-            error_message = error.get("message")
-            result = f"{file}: {error_message}"
-            html_results.append((result, expected))
+html_results = get_html_error_report(html_files)
+print(html_results)
 
 
 @pytest.mark.parametrize("result,expected", html_results)

@@ -1,6 +1,7 @@
 """
 Test CSS Requirements.
 """
+from bs4 import BeautifulSoup
 import pytest
 import file_clerk.clerk as clerk
 from webcode_tk import css_tools as css
@@ -24,10 +25,18 @@ no_style_attribute_tests = []
 def set_style_attribute_tests(path):
     results = []
     for file in html_files:
-        data = html.get_style_attribute_data(file)
-        if data:
-            for datum in data:
-                results.append(datum)
+        filename = clerk.get_file_name(file)
+        html = clerk.file_to_string(file)
+        soup = BeautifulSoup(html, "html.parser")
+        tags_with_style = soup.find_all(lambda tag: tag.has_attr('style'))
+        number = len(tags_with_style)
+        result = ""
+        expected = f"pass: in {filename}, there are no tags with a style attribute."
+        if number > 0:
+            result = f"fail: in {filename}, there are {number} tags with a style attribute applied."
+        else:
+            result = expected
+        results.append((result, expected))
     return results
 
 
@@ -139,19 +148,36 @@ def get_required_properties(required_properties, has_required_properties,
                     has_required_properties["background-color"] = True
 
 
+def applies_css(styles_by_html_files: list) -> list:
+    results = []
+    for item in styles_by_html_files:
+        path = item.get("file")
+        filename = clerk.get_file_name(path)
+        expected = f"pass: {filename} applies CSS."
+        sheets = item.get("stylesheets")
+        applies_styles = False
+        if sheets:
+            for sheet in sheets:
+                if sheet.text:
+                    applies_styles = True
+        if applies_styles:
+            result = expected
+        else:
+            result = f"fail: {file} does not apply CSS"
+        results.append((result, expected))
+    return results
+
 figure_property_data = get_figure_property_data(styles_by_html_files)
 contrast_results = prep_contrast_results(project_path)
 font_families_tests = get_unique_font_families(project_path)
 font_rules_results = get_font_rules_data(font_families_tests)
 font_selector_results = get_font_selector_data(font_families_tests)
 font_family_results = get_font_family_data(font_families_tests)
-style_attributes_data = set_style_attribute_tests(project_path)
-if not style_attributes_data:
-    try:
-        filename = clerk.get_file_name(file)
-        style_attributes_data = [(filename, "no tag", "applies style attribute")]
-    except NameError:
-        style_attributes_data = [("no file", "no tag", "applies style attribute")]
+style_attributes_data = set_style_attribute_tests(html_files)
+stylesheets = css.get_all_project_stylesheets(project_path)
+
+applies_styles = applies_css(styles_by_html_files)
+
 try:
     link_colors = css.get_link_color_data(project_path)
 except TypeError:
@@ -178,30 +204,14 @@ def link_color_details():
     return link_colors
 
 
-@pytest.fixture
-def has_css_applied():
-    css_applied = True
-    for item in style_attributes_data:
-        if "no file" in item[0]:
-            css_applied = False
-    return css_applied
+@pytest.mark.parametrize("result,expected", applies_styles)
+def test_for_any_css_tag_or_stylesheet(result, expected):
+    assert result == expected
 
 
-def test_for_any_css_tag_or_stylesheet(has_css_applied):
-    assert has_css_applied
-
-
-@pytest.mark.parametrize("file,tag,value", style_attributes_data)
-def test_files_for_style_attribute_data(file, tag, value):
-    if tag == "no tag" and value == "applies style attribute":
-        # ("no file", "no tag", "applies style attribute")
-        results = f"Pass: {file} has style attributes."
-        expected = "Pass: no file has style attributes."
-        assert results == expected
-    else:
-        results = f"Tag: <{tag}> from '{file}' has a style attribute"
-        expected = f"Pass: {file} has no style attributes."
-        assert results == expected
+@pytest.mark.parametrize("result,expected", style_attributes_data)
+def test_files_for_style_attribute_data(result, expected):
+    assert result == expected
 
 
 @pytest.mark.parametrize("passes,message",
