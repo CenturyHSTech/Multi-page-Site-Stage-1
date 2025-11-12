@@ -20,17 +20,17 @@ def get_html_error_report(html_files: list) -> list:
                 content.remove("")
                 errors = [f"fail: {filename} {msg}" for msg in content]
                 for error in errors:
+                    message = error.split(">")
+                    error = message[0]
+                    error = error.replace("  ", " ")
                     results.append((error, expected))
-
     return results
 
 
 project_path = "project/"
-project_path = "tests/test_project/"
 html_results = []
 html_files = clerk.get_all_files_of_type(project_path, "html")
 html_results = get_html_error_report(html_files)
-print(html_results)
 
 
 @pytest.mark.parametrize("result,expected", html_results)
