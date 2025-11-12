@@ -6,7 +6,7 @@ import pytest
 from webcode_tk import html_tools as html
 
 # List of required elements per page
-required_elements = [("doctype", 1),
+required_exact_num_elements = [("doctype", 1),
                      ("html", 1),
                      ("head", 1),
                      ("title", 1),
@@ -22,12 +22,17 @@ required_elements = [("doctype", 1),
                      ("a", 4),
                     ]
 
-project_path = "project/"
-project_path = "tests/test_project/"
+project_dir = "project/"
+project_dir = "tests/test_project/"
+
+exact_number_of_elements = html.get_number_of_elements_per_file(
+    project_dir, required_exact_num_elements
+)
+
 
 @pytest.fixture
 def files():
-    files = clerk.get_all_files_of_type(project_path, "html")
+    files = clerk.get_all_files_of_type(project_dir, "html")
     return files
 
 
