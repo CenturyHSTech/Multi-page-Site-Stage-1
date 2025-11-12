@@ -22,13 +22,7 @@ required_exact_num_elements = [("doctype", 1),
                      ("a", 4),
                     ]
 
-project_dir = "project/"
-project_dir = "tests/test_project/"
-
-exact_number_of_elements = html.get_number_of_elements_per_file(
-    project_dir, required_exact_num_elements
-)
-
+project_path = "project/"
 
 @pytest.fixture
 def files():
