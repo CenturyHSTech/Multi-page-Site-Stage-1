@@ -5,24 +5,20 @@ from file_clerk import clerk
 import pytest
 from webcode_tk import html_tools as html
 
-# List of required elements per page
-exact_required_elements = [
-    ("doctype", 1),
-    ("html", 1),
-    ("head", 1),
-    ("title", 1),
-    ("header", 1),
-    ("footer", 1),
-    ("h1", 1),
-    ("nav", 1),
-    ]
-min_required_elements = [
-    ("article or section", 1),
-    ("h2", 3),
-    ("p", 5),
-    ("ul", 1),
-    ("li", 4),
-    ("a", 4),
+
+exact_num_elements_per_page = [
+    ("main", 1),
+]
+min_required_elements_per_page = [
+    ("hgroup", 1),
+    ("article or section", 3),
+    ("aside", 1),
+    ("figure or div", 2),
+    ("img", 2),
+    ("p", 6),
+    ("ul", 2),
+    ("li", 8),
+    ("a", 8),
     ]
 
 project_path = "project/"
@@ -33,11 +29,7 @@ def files():
     return files
 
 
-def test_for_minimum_number_of_html_files(files):
-    assert len(files) > 3
-
-
-@pytest.mark.parametrize("element,num", exact_required_elements)
+@pytest.mark.parametrize("element,num", exact_num_elements_per_page)
 def test_files_for_exact_number_of_elements_per_page(element, num, files):
     if not files:
         assert False
@@ -53,8 +45,8 @@ def test_files_for_exact_number_of_elements_per_page(element, num, files):
             assert actual == num
 
 
-@pytest.mark.parametrize("element,num", min_required_elements)
-def test_files_for_minimum_required_elements(element, num, files):
+@pytest.mark.parametrize("element,num", min_required_elements_per_page)
+def test_files_for_minimum_number_of_elements_per_page(element, num, files):
     if not files:
         assert False
     for file in files:
@@ -63,7 +55,7 @@ def test_files_for_minimum_required_elements(element, num, files):
             total = 0
             for opt in options:
                 total += html.get_num_elements_in_file(opt, file)
-            assert total >= num
+            assert total == num
         else:
             actual = html.get_num_elements_in_file(element, file)
-            assert actual >= num
+            assert actual == num

@@ -9,7 +9,6 @@ from webcode_tk import css_tools as css
 from webcode_tk import html_tools as html
 
 project_path = "project/"
-project_path = "tests/test_project/"
 html_files = html.get_all_html_files(project_path)
 styles_by_html_files = css.get_styles_by_html_files(project_path)
 color_contrast_results = contrast.generate_contrast_report(project_path)

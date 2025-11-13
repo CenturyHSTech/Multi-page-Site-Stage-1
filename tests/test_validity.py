@@ -28,12 +28,18 @@ def get_html_error_report(html_files: list) -> list:
 
 
 project_path = "project/"
-project_path = "tests/test_project/"
+css_validation_results = validator.get_project_validation(project_path, "css")
 html_results = []
 html_files = clerk.get_all_files_of_type(project_path, "html")
 html_results = get_html_error_report(html_files)
 
 
+
 @pytest.mark.parametrize("result,expected", html_results)
 def test_html_validity(result, expected):
     assert result == expected
+
+
+@pytest.mark.parametrize("result", css_validation_results)
+def test_css_validity(result):
+    assert "pass" in result[:4]
