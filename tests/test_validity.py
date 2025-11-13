@@ -7,9 +7,9 @@ from webcode_tk import validator_tools as validator
 
 
 def get_html_error_report(html_files: list) -> list:
+    results = []
     for file in html_files:
         report = validator.get_validation_by_browser(file)
-        results = []
         for item in report:
             filename = clerk.get_file_name(file)
             expected = f"pass: {filename} has no HTML errors!"
@@ -28,6 +28,7 @@ def get_html_error_report(html_files: list) -> list:
 
 
 project_path = "project/"
+project_path = "tests/test_project/"
 html_results = []
 html_files = clerk.get_all_files_of_type(project_path, "html")
 html_results = get_html_error_report(html_files)

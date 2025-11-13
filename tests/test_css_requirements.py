@@ -1,6 +1,7 @@
 """
 Test CSS Requirements.
 """
+from bs4 import BeautifulSoup
 import pytest
 import file_clerk.clerk as clerk
 from webcode_tk import contrast_tools as contrast
@@ -8,10 +9,17 @@ from webcode_tk import css_tools as css
 from webcode_tk import html_tools as html
 
 project_path = "project/"
+project_path = "tests/test_project/"
 html_files = html.get_all_html_files(project_path)
 styles_by_html_files = css.get_styles_by_html_files(project_path)
 color_contrast_results = contrast.generate_contrast_report(project_path)
 no_style_attribute_tests = []
+REQUIRED_ELEMENTS = (
+    "header",
+    "nav",
+    "article or section",
+    "footer",
+)
 required_properties = {
     "header": {"properties": ("padding",),},
     "nav": {"properties": ("padding",),},
@@ -110,6 +118,30 @@ def get_font_selector_data(font_tests):
     return rules_data
 
 
+def get_html_elements_required_and_used(project_path, required_properties):
+    required_and_used = set()
+
+    # get required elements (regardless of whether they are present or not)
+    for element in required_properties.keys():
+        if element in REQUIRED_ELEMENTS:
+            required_and_used.add(element)
+
+    # add any elements present in the required properties
+    for file in html_files:
+        for element in required_properties.keys():
+            if "or" in element:
+                options = [opt.strip() for opt in element.split("or")]
+                for element in options:
+                    number = html.get_num_elements_in_file(element, file)
+                    if number:
+                        required_and_used.add(element)
+            number = html.get_num_elements_in_file(element, file)
+            if number:
+                required_and_used.add(element)
+    return required_and_used
+
+
+
 def prep_properties_applied_report(project_path, required_properties):
     properties_applied_report = css.get_properties_applied_report(
         project_path,
@@ -168,6 +200,8 @@ def applies_css(styles_by_html_files: list) -> list:
         results.append((result, expected))
     return results
 
+
+required_and_set = get_html_elements_required_and_used(project_path, required_properties)
 font_families_tests = get_unique_font_families(project_path)
 style_attributes_data = set_style_attribute_tests(html_files)
 stylesheets = css.get_all_project_stylesheets(project_path)
@@ -191,9 +225,14 @@ def html_docs():
     return html_files
 
 
-@pytest.mark.parametrize("results", applying_styles_results)
-def test_if_file_applies_styles(results):
-    assert "pass" in results
+@pytest.mark.parametrize("result,expected", applies_styles)
+def test_for_any_css_tag_or_stylesheet(result, expected):
+    assert result == expected
+
+
+@pytest.mark.parametrize("result,expected", style_attributes_data)
+def test_files_for_style_attribute_data(result, expected):
+    assert result == expected
 
 
 @pytest.mark.parametrize("message",
