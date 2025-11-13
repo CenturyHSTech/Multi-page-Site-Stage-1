@@ -142,18 +142,19 @@ def get_html_elements_required_and_used(project_path, required_properties):
 
 
 
-def prep_properties_applied_report(project_path, required_properties):
+def prep_properties_applied_report(project_path, required_properties,
+                                   required_and_used):
+    # Figure out how to only test for required and used elements
     properties_applied_report = css.get_properties_applied_report(
         project_path,
         required_properties
     )
     final_report = set()
-    # get all elements from the list that are in the file
-    possible_elements = list(required_properties.keys())
+    # get all elements from required_and_used
     html_files = html.get_all_html_files(project_path)
     actual_elements = set()
     for file in html_files:
-        for element in possible_elements:
+        for element in required_and_used:
             element = html.get_elements(element, file)
             if element:
                 element_name = element[0].name
@@ -206,7 +207,8 @@ font_families_tests = get_unique_font_families(project_path)
 style_attributes_data = set_style_attribute_tests(html_files)
 stylesheets = css.get_all_project_stylesheets(project_path)
 required_properties = prep_properties_applied_report(project_path,
-                                                     required_properties)
+                                                     required_properties,
+                                                     required_and_set)
 applies_styles = applies_css(styles_by_html_files)
 
 
