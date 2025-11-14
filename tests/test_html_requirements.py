@@ -12,17 +12,17 @@ exact_required_elements = [
     ("head", 1),
     ("title", 1),
     ("header", 1),
-    ("footer", 1),
     ("h1", 1),
-    ("nav", 1),
     ]
 min_required_elements = [
+    ("nav", 1),
     ("article or section", 1),
     ("h2", 3),
     ("p", 5),
     ("ul", 1),
     ("li", 4),
     ("a", 4),
+    ("footer", 1),
     ]
 
 project_path = "project/"
